@@ -28,6 +28,7 @@ class Deps:
     hackathon_context: str
     flow_of_options_pages_dir: Path
     flow_of_options_page_count: int
+    hfpef_digest: str
 
 
 agent = Agent(
@@ -45,7 +46,10 @@ agent = Agent(
         "below define what 'good' looks like — optimize for it. The full FoO "
         "paper text is provided as ground truth, but figures and tables aren't "
         "in that text — call read_paper_pages(pages=[...]) to see rendered "
-        "pages whenever you need to inspect figures, diagrams, or numeric tables."
+        "pages whenever you need to inspect figures, diagrams, or numeric tables. "
+        "A research digest on HFpEF biomarker stratification (a candidate domain "
+        "for extending FoO) is also available — call read_hfpef_digest() if you "
+        "want that background before settling on a research direction."
     ),
 )
 
@@ -74,6 +78,16 @@ agent.tool_plain(image_to_base64)
 
 
 @agent.tool
+def read_hfpef_digest(ctx: RunContext[Deps]) -> str:
+    """Return the full HFpEF biomarker stratification research digest.
+
+    Markdown document covering candidate biomarkers, subphenotyping approaches,
+    and a ranked list of preprints suitable for an FoO-style extension.
+    """
+    return ctx.deps.hfpef_digest
+
+
+@agent.tool
 def read_paper_pages(ctx: RunContext[Deps], pages: list[int]) -> list[BinaryContent]:
     """Return rendered PNG images of the requested pages of the Flow-of-Options paper.
 
@@ -97,6 +111,7 @@ def run(problem_domain: str, papers_dir: Optional[Path] = None) -> Paper:
         hackathon_context=(PAPERS_DIR / "hackathon_context.txt").read_text(),
         flow_of_options_pages_dir=pages_dir,
         flow_of_options_page_count=len(list(pages_dir.glob("page_*.png"))),
+        hfpef_digest=(PAPERS_DIR / "hfpef_biomarkers_hack_filled.md").read_text(),
     )
 
     async def _run():
