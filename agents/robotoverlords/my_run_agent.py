@@ -49,6 +49,10 @@ agent = Agent(
         f"the Flow-of-Options (FoO) paper (arXiv:2502.12929). Cite it, build on "
         f"it, and address its limitations. Return a Paper with non-empty title, "
         f"introduction, methods, results.\n\n"
+        f"HARD WORD LIMIT: 3500 words total across title + introduction + "
+        f"methods + results (references and appendix don't count). Stay well "
+        f"under this — aim for ~2500 words so JSON serialization fits the "
+        f"model's output budget.\n\n"
         f"BUDGET: you have {REQUEST_LIMIT} model requests and {WALL_CLOCK_S} "
         f"seconds wall clock for the entire run. Each turn you can call tools "
         f"in parallel, but you only get {REQUEST_LIMIT} turns total — the LAST "
@@ -150,6 +154,7 @@ def run(problem_domain: str, papers_dir: Optional[Path] = None) -> Paper:
                 request_limit=REQUEST_LIMIT,
                 tool_calls_limit=TOOL_CALLS_LIMIT,
             ),
+            model_settings={"max_tokens": 16000},
             event_stream_handler=on_event,
         )
 
