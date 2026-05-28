@@ -1,0 +1,35 @@
+Proposed exp plan:
+
+Good question — and the research points pretty directly at one design. The core claim you'd be testing is SQ4's: HFpEF phenomapping pipelines carry many under-justified modeling
+  choices, and reproducibility across cohorts is poor. That's exactly the surface FoO's option-enumeration is built for, so the experiment should test whether diversified-option
+  search over the pipeline beats a fixed single path — measured by reproducibility and prognostic utility, both of which are computable automatically.
+  Recommended experiment: a cross-cohort phenogroup benchmark with an automatic reward
+  Unit of experiment ("episode"): the agent runs one full unsupervised stratification pipeline — feature selection → transform/scaling → algorithm → k → (optional) omics-integration.
+  Each node is where FoO enumerates options; a run emits a set of phenogroup labels.
+  Reward (the crux — fully agent-scorable, deterministic):
+  - Reproducibility: derive clusters on cohort A, assign cohort B, score label agreement against B's own re-derived clustering (Adjusted Rand / AMI), plus within-A bootstrap stability
+   (prediction strength). This is literally BECAME's Belgian→Canadian RF-classifier validation turned into a metric — use that paper as the template. 
+  - Prognostic utility: between-cluster survival/readmission separation on held-out outcomes (log-rank χ², or C-index of cluster membership).
+  - Composite scalar = weighted combination → the per-episode reward. No human in the loop.
+  
+  Arms (to isolate what FoO actually contributes):
+  1. Fixed conventional pipeline (k-means on standardized clinical vars, k by silhouette) — the "single path" strawman.
+  2. Blind search (random/grid) over the same option space — the real baseline FoO must beat.
+  3. FoO-diversified agent (enumerate + explore diverse option combinations).
+  4. Single-chain LLM agent (no diversification) — isolates the diversification contribution vs just "an LLM in the loop."
+  
+  Hypothesis: FoO finds pipelines that are simultaneously more cross-cohort-reproducible and more prognostically separating, and gets there more sample-efficiently than blind search.
+  Public-data backbone: MIMIC-IV + eICU-CRD (both PhysioNet) give you two independent EHR cohorts — derive HFpEF subsets (LVEF ≥50% + HF dx + labs/vitals/outcomes), so the
+  cross-cohort split is built in. For a multi-omic variant matching the top SQ5 candidates (O'Sullivan, Versnjak), layer in public GWAS summary stats + pQTL (GWAS Catalog) or GEO
+  transcriptomics.
+  
+  The main tradeoff to decide up front
+  This benchmark scores reproducibility + prognosis, which is the fully-public, clean target. It does not test predictive value (treatment-response heterogeneity) — and SQ3's sharpest
+   finding (suPAR-TOPCAT: strong prognosis, zero treatment interaction) is exactly that prognosis ≠ predictive. The predictive version is higher-value but needs patient-level trial
+  data, which is mostly gated (TOPCAT via BioLINCC application; STEP not public). So: go fully-public-and-clean now (prognosis/reproducibility), and treat predictive value as a
+  phase-2 stretch contingent on a data application.
+  One complement worth adding cheaply: a semi-synthetic known-answer arm — plant true subphenotype structure under controlled noise/confounding and score exact cluster recovery. It's
+  the only setting with perfect ground truth, isolates whether option-enumeration recovers true structure, and is trivially scorable; the caveat is synthetic ≠ real biology, so use it
+   to validate the method, not to make biological claims.
+  
+  Want me to check (via Paperclip / ClinicalTrials) which of these datasets are genuinely patient-level public vs application-gated before you commit to the data backbone?
