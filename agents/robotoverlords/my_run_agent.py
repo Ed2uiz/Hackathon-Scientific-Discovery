@@ -1,4 +1,5 @@
 """Pydantic AI run agent for robotoverlords."""
+import asyncio
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional
@@ -6,14 +7,19 @@ from typing import Optional
 from dotenv import load_dotenv
 from pydantic_ai import Agent, BinaryContent, RunContext
 from pydantic_ai.models.bedrock import BedrockConverseModel
+from pydantic_ai.usage import UsageLimits
 
 from hackathon_science import Paper
 from hackathon_science.tools import image_to_base64, run_code, search_web
 
-load_dotenv(Path(__file__).resolve().parents[2] / ".env")
+load_dotenv(Path(__file__).resolve().parents[2] / ".env", override=True)
 
 MODEL_ID = "global.anthropic.claude-opus-4-7"
 PAPERS_DIR = Path(__file__).with_name("papers")
+
+REQUEST_LIMIT = 20       # max model requests (≈ tool-loop iterations)
+TOOL_CALLS_LIMIT = 30    # max total tool calls across the run
+WALL_CLOCK_S = 300       # hard timeout per run
 
 
 @dataclass
@@ -28,6 +34,8 @@ agent = Agent(
     BedrockConverseModel(MODEL_ID),
     deps_type=Deps,
     output_type=Paper,
+    end_strategy="exhaustive",
+    retries=3,
     system_prompt=(
         "You are a research scientist writing a follow-up paper that extends "
         "the Flow-of-Options (FoO) paper (arXiv:2502.12929). Cite it, build on "
@@ -90,5 +98,16 @@ def run(problem_domain: str, papers_dir: Optional[Path] = None) -> Paper:
         flow_of_options_pages_dir=pages_dir,
         flow_of_options_page_count=len(list(pages_dir.glob("page_*.png"))),
     )
-    result = agent.run_sync(problem_domain, deps=deps)
+
+    async def _run():
+        return await agent.run(
+            problem_domain,
+            deps=deps,
+            usage_limits=UsageLimits(
+                request_limit=REQUEST_LIMIT,
+                tool_calls_limit=TOOL_CALLS_LIMIT,
+            ),
+        )
+
+    result = asyncio.run(asyncio.wait_for(_run(), timeout=WALL_CLOCK_S))
     return result.output
