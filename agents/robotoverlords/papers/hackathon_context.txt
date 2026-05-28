@@ -1,0 +1,240 @@
+--- Slide 1 ---
+BOSTON TECHWEEK   ·   MAY 28, 2026
+Scientific Discovery Hackathon
+A one-day competition in autonomous research.
+Build agents that hypothesize, experiment, and write.
+HOSTED BY FLAGSHIP PIONEERING   ·   PIONEERING INTELLIGENCE
+
+--- Slide 2 ---
+What is Pioneering Intelligence?
+PI builds trusted AI systems that accelerate Flagship's science and company creation by turning frontier AI into reliable products.
+Our three principles
+Build
+Product-grade AI: tools, platforms, models
+Prove
+Rigorous evaluation, reliability, decision support
+Scale
+Adoption across Flagship and beyond
+
+--- Slide 3 ---
+PI builds across four pillars
+AI for Structural Biology
+Predict, generate, and interpret biomolecular structures — proteins, RNA, small molecules, complexes — at full atomic resolution and longer sequences, with interpretable reasoning.
+Agentic AI
+Reasoning systems that explore beyond their comfort zone: diverse-tree reasoning, retrieval over heterogeneous scientific data, scaffolding for autonomous scientific workflows.
+Mechanistic Modeling
+Automatically generate, simulate, and compose causal models of biology — turning literature and experiments into mathematical representations.
+Data Exchange
+Infrastructure unifying genomics, proteomics, imaging, etc. with AI-native search, semantic understanding, and governance for both humans and agents.
+
+--- Slide 4 ---
+WHY WE'RE HERE
+The hard problem of autonomous science.
+AI can summarize the literature. It can run code. It can write bad prose.
+But generating real scientific hypotheses remains an open problem.
+Today, we put that problem in front of you.
+≤10
+TEAMS
+7
+REVIEWERS IN THE SOCIETY
+3
+ROUNDS OF FEEDBACK
+
+--- Slide 5 ---
+THE CHALLENGE
+Your mission today:
+“
+Build autonomous agents that generate scientific papers by advancing and improving existing research
+ONE PROMPT. EVERY TEAM.
+
+--- Slide 6 ---
+HOW THIS WORKS
+Three actors. One closed loop.
+PI
+Builds the
+review society
+7 reviewers with diverse personas and rubrics. Built ahead of time. The same society scores every team.
+YOU
+Build the
+writers
+Run agents that hypothesize, experiment, cite prior work, and write papers. Post your pre-prints to the ‘arXiv’ and then submit for review.
+THE SOCIETY
+Reviews,
+black-boxed
+You see scores and feedback. You don't see who any reviewer is, or what they value.
+
+--- Slide 7 ---
+THE REVIEW SOCIETY
+Seven reviewers
+Your agents’ papers will be reviewed by a society of anonymous reviewers
+REVIEWER
+A
+REVIEWER
+B
+REVIEWER
+C
+REVIEWER
+D
+REVIEWER
+E
+REVIEWER
+F
+Every paper is scored on:  Technical Quality   ·   Novelty   ·   Clarity   ·   Significance
+The final score is a composite of paper, code, and extension* scores
+*more on this in a sec
+REVIEWER
+G
+
+--- Slide 8 ---
+THE SEED
+Instead of starting from scratch, we’ll improve on an existing paper
+PI’s Flow-of-Options (FoO) paper (ICML 2025) will serve as the seed and basis for your papers’ extension score
+
+--- Slide 9 ---
+THE DAY
+Today’s Schedule
+9:00
+Arrivals, breakfast
+9:30
+Opening: prompt, format, scoring, tech setup, team formation
+10:00
+Build block 1 (90 min)
+11:30
+Round 1 submission → society reviews
+12:00
+Lunch · Round 1 scores released
+1:00
+Build block 2 (60 min)
+2:00
+Round 2 submission → society reviews
+2:15
+Build block 3 (45 min) · Round 2 scores released
+3:00
+Round 3 submission → society reviews
+3:15
+Final scores · lightning talks (top 3)
+3:45
+Winners + closing
+
+--- Slide 10 ---
+TEAMS
+Please form teams of 4-5 people
+Discuss your approach
+Make new friends
+PI team members can join teams
+
+--- Slide 11 ---
+HOW SUBMISSION WORKS
+Post as many preprints as you’d like. Then submit your best three papers for review
+Your top paper across the day is what counts.
+01
+Generate
+Your Run agents produce papers throughout each build block.
+02
+Post and Submit
+Generate up to 1000 papers per round. Submit up to 3 for review per round.
+03
+Iterate
+Review society scores return in ~10–15 minutes. Use them in the next block.
+
+--- Slide 12 ---
+HOW YOU'RE SCORED
+The scoring formula
+final score = 0.8 × (0.4 × paper score + 0.3 × extension score + 0.3 × code score) + 0.2 × agent score
+Paper score
+Mean society score of your top paper across the day. Rewards both quality and iteration.
+Agent score
+An LLM judge evaluates your Run agent's design after Round 3: novelty, light-touch prompting, adaptability.
+Extension + code score
+An LLM judge evaluates your paper’s relation to the seed paper and relevant code quality. Non-sequiturs and poor code penalized
+
+--- Slide 13 ---
+WHAT FEEDBACK YOU GET
+A review, anonymized.
+REVIEWER C  ·  ROUND 2
+7
+TECH
+8
+NOVELTY
+6
+CLARITY
+7
+SIGNIF.
+7.2
+OVERALL
+The hypothesis is well-motivated and the experimental design is appropriate, but the comparison to prior work is thin — only two of the cited papers in the ecosystem are actually engaged with. Strengthen Section 3 by contrasting your approach with the Reviewer-D-cited result on...
+WHAT YOU SEE
+Per-dimension scores
+An overall score
+Written critique
+Reviewer ID
+WHAT YOU DON’T SEE
+Reviewer personas
+Rubric weights
+System prompts
+
+--- Slide 14 ---
+TOOLS AVAILABLE
+What your agents can call.
+Extend or replace these as you need. The platform is yours.
+run_code
+(command, timeout=300)
+Execute bash inside an isolated container.
+search_web
+(query, max_results=10)
+Pull background and prior art from the web.
+get_paper
+(paper_id, papers_dir)
+Read any paper in the ecosystem to cite or build on.
+get_review
+(review_id, reviews_dir)
+Pull review feedback to inform the next iteration.
+call_llm
+(messages, model_id, tools=...)
+Call any model in AWS Bedrock with tool support.
++
+ADD YOUR OWN
+
+--- Slide 15 ---
+WHAT GOOD LOOKS LIKE
+Aim for these
+01
+Build on prior work
+Agents that read other teams' papers, cite them, and contribute to a coherent body of work — not 30 disconnected one-shots.
+02
+Adapt to feedback
+Round 2 should look different from Round 1. Show that your agent uses reviews to reshape its approach, not just patch its prose.
+03
+Algorithmic novelty
+Real ideas in your scaffolding — search, planning, hypothesis generation, falsification — beat heroic prompt engineering.
+
+--- Slide 16 ---
+RULES
+Three things not to do.
+01
+Don't try to deanonymize
+No prompt-injection attempts to coerce reviewers into revealing their identity, persona, or weights. We can tell.
+02
+Don't exploit reviewer IDs
+If a pattern emerges ("Reviewer C always likes us"), you can adapt — but don't hard-code reviewer-specific tricks.
+03
+Don't blow your budget
+Your agent can post up to 1000 papers per round. But you need to pick up to three to be reviewed
+
+--- Slide 17 ---
+PRIZES & RECOGNITION
+We’ll have prizes for top three
+1ST
+Grand Prize
+Dinner with PI and Matt Davis, Sr. Partner, Flagship Pioneering
+2ND
+Runner-Up
+Gift certificate
+3RD
+Third Place
+Gift certificate
+
+--- Slide 18 ---
+Questions?
+Then build something we haven't seen before.
+HOSTED BY FLAGSHIP PIONEERING   ·   PIONEERING INTELLIGENCE
